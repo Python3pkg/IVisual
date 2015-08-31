@@ -7,7 +7,7 @@ from ivisual.rate_control import *
 from IPython.display import HTML
 from IPython.display import display, display_html, display_javascript
 from IPython.display import Javascript
-from IPython.kernel.comm import Comm
+from ipykernel.comm import Comm
 from IPython.core.getipython import get_ipython
 import time
 import math
@@ -15,7 +15,7 @@ import uuid
 import inspect
 from time import clock
 import os
-import IPython.html.nbextensions
+from notebook.nbextensions import install_nbextension
 import datetime, threading
 import collections
 import copy
@@ -84,12 +84,9 @@ rate = RateKeeper2(interactFunc = ifunc)
 display(HTML("""<div id="scene0"><div id="glowscript" class="glowscript"></div></div>"""))
 
 package_dir = os.path.dirname(__file__)
-if IPython.__version__ >= '3.0.0' :
-    IPython.html.nbextensions.install_nbextension(path = package_dir+"/data/jquery-ui.custom.min.js",overwrite = True,user = True,verbose = 0)
-    IPython.html.nbextensions.install_nbextension(path = package_dir+"/data/glow.1.1.min.js",overwrite = True,user = True,verbose = 0)
-    IPython.html.nbextensions.install_nbextension(path = package_dir+"/data/glowcomm.js",overwrite = True,user = True,verbose = 0)
-else:
-    IPython.html.nbextensions.install_nbextension(files = [package_dir+"/data/jquery-ui.custom.min.js",package_dir+"/data/glow.1.1.min.js",package_dir+"/data/glowcomm.js"],overwrite=True,verbose=0)
+install_nbextension(path = package_dir+"/data/jquery-ui.custom.min.js",overwrite = True,user = True,verbose = 0)
+install_nbextension(path = package_dir+"/data/glow.1.1.min.js",overwrite = True,user = True,verbose = 0)
+install_nbextension(path = package_dir+"/data/glowcomm.js",overwrite = True,user = True,verbose = 0)
 
 
 object_registry = {} # GUID -> Instance
