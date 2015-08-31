@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name='IVisual-alt',
-    version='0.2.01',
-    author='John Coady <johncoady@shaw.ca>, Nathan Whitehead <nwhitehe@gmail.com>',
+    version='0.2.03',
+    author='John Coady, Nathan Whitehead',
     author_email='johncoady@shaw.ca, nwhitehe@gmail.com',
     packages=['ivisual', 'ivisual.test'],
     package_data={'ivisual': ['data/*.js']},
