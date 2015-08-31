@@ -5,7 +5,7 @@ setup(
     version='0.2.01',
     author='John Coady <johncoady@shaw.ca>, Nathan Whitehead <nwhitehe@gmail.com>',
     author_email='johncoady@shaw.ca, nwhitehe@gmail.com',
-    packages=['ivisual'],
+    packages=['ivisual', 'ivisual.test'],
     package_data={'ivisual': ['data/*.js']},
     url='https://github.com/nwhitehead/IVisual',
     license='Unknown',
