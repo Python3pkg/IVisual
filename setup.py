@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(
-    name='IVisual',
-    version='0.2.00',
+    name='IVisual-alt',
+    version='0.2.01',
     author='John Coady <johncoady@shaw.ca>, Nathan Whitehead <nwhitehe@gmail.com>',
     author_email='johncoady@shaw.ca, nwhitehe@gmail.com',
     packages=['ivisual'],
@@ -11,7 +11,8 @@ setup(
     license='Unknown',
     description='VPython visual inline for IPython Notebook',
     long_description=open('README.md').read(),
-    keywords=['VPython', 'IPython', 'IVisual', 'Graphics', '3D', 'visualization', 'rendering'],
+    keywords=['VPython', 'IPython', 'IVisual', 'jupyter', 'notebook',
+              'Graphics', '3D', 'visualization', 'rendering', 'animation'],
     classifiers=[
           'Framework :: IPython',
           'Development Status :: 4 - Beta',
@@ -22,6 +23,9 @@ setup(
           'Topic :: Multimedia :: Graphics :: 3D Modeling',
           'Topic :: Multimedia :: Graphics :: 3D Rendering',
           'Topic :: Scientific/Engineering :: Visualization',
+    ],
+    install_requires=[
+        'ipykernel',
     ],
     zip_safe=False,
 )
