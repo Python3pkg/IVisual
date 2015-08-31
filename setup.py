@@ -26,6 +26,8 @@ setup(
     ],
     install_requires=[
         'ipykernel',
+        'numpy',
+        'notebook',
     ],
     zip_safe=False,
 )
