@@ -1,4 +1,5 @@
 from __future__ import print_function, division, absolute_import
+import six
 import ivisual.crayola as color
 import ivisual.materials
 import numpy as np
@@ -121,7 +122,7 @@ class baseObj(object):
         object.__setattr__(self, 'attrsupdt', set())
         object.__setattr__(self, 'oid', remember(self))
         if kwargs is not None:
-            for key, value in kwargs.iteritems():
+            for key, value in six.iteritems(kwargs):
                 object.__setattr__(self, key, value)
         baseObj.incrObjCnt()
         if(canvas.get_selected() != None):
