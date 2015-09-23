@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='IVisual-alt',
-    version='0.2.3',
+    version='0.2.4',
     author='John Coady, Nathan Whitehead',
     author_email='johncoady@shaw.ca, nwhitehe@gmail.com',
     packages=['ivisual', 'ivisual.test'],
