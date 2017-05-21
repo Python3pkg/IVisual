@@ -1,4 +1,4 @@
-from __future__ import division, print_function
+
 import time
 import sys
 from numpy import zeros, random

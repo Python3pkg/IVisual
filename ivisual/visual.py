@@ -1,4 +1,4 @@
-from __future__ import print_function, division, absolute_import
+
 import six
 import ivisual.crayola as color
 import ivisual.materials
@@ -217,7 +217,7 @@ def commsend():
                                     attrval = getattr(ob,attr)
                                     if attrval is not None:
                                         if attr in ['axis','pos','up','axis_and_length','center','forward','origin']:
-                                            attrvalues = attrval.values()
+                                            attrvalues = list(attrval.values())
                                             if attrvalues is not None:
                                                 commcmds[l]['idx'] = ob.idx
                                                 commcmds[l]['attr'] = attr
@@ -228,7 +228,7 @@ def commsend():
                                                 commcmds[l]['attr'] = attr
                                                 commcmds[l]['val'] = attrval
                                             else:
-                                                attrvalues = attrval.values()
+                                                attrvalues = list(attrval.values())
                                                 if attrvalues is not None:
                                                     commcmds[l]['idx'] = ob.idx
                                                     commcmds[l]['attr'] = attr
@@ -283,7 +283,7 @@ commsend()
 
 class AllMyFields(object):
     def __init__(self, dictionary):
-        for k, v in dictionary.items():
+        for k, v in list(dictionary.items()):
             setattr(self, k, v)
             
 class GlowWidget(object):
@@ -382,7 +382,7 @@ class GlowWidget(object):
         return get_ipython().execution_count
 
     def parse_object(self, obj):
-        if type(obj) in [str, int, long, bool, float, tuple, complex]:
+        if type(obj) in [str, int, int, bool, float, tuple, complex]:
             return obj
         elif isinstance(obj, collections.Sequence):
             if type(obj) is list:
@@ -392,7 +392,7 @@ class GlowWidget(object):
                         lst.append(object_registry[itm['guido']])
                     else:
                         lst.append(itm)
-                if (len(lst) == 3) and (type(lst[0]) in [int, long, float]) and (type(lst[1]) in [int, long, float]) and (type(lst[2]) in [int, long, float]):
+                if (len(lst) == 3) and (type(lst[0]) in [int, int, float]) and (type(lst[1]) in [int, int, float]) and (type(lst[2]) in [int, int, float]):
                     return tuple(lst)
                 return lst
         elif 'guido' in obj:
@@ -416,7 +416,7 @@ class vector(object):
     'vector class'
     __change_notifications = None
     def __init__(self, x=(0.,0.,0.), y=0., z=0.):
-        if isinstance(x, (int, long, float)) and isinstance(y, (int, long, float)) and isinstance(z, (int, long, float)):
+        if isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float)):
             self.__dict__['x'] = x
             self.__dict__['y'] = y
             self.__dict__['z'] = z
@@ -452,28 +452,28 @@ class vector(object):
             return vector(self.x - other.x, self.y - other.y, self.z - other.z)
     
     def __mul__(self, other):
-        if isinstance(other, (int, long, float)):
+        if isinstance(other, (int, float)):
             return vector(self.x * other, self.y * other, self.z * other)
         elif isinstance(other, (complex)):
             raise Exception("TypeError: unsupported operand type(s) for *: 'complex' and 'vector'")
         return self
     
     def __rmul__(self, other):
-        if isinstance(other, (int, long, float)):
+        if isinstance(other, (int, float)):
             return vector(self.x * other, self.y * other, self.z * other)
         elif isinstance(other, (complex)):
             raise Exception("TypeError: unsupported operand type(s) for *: 'complex' and 'vector'")
         return self
 
     def __div__(self, other):
-        if isinstance(other, (int, long, float)):
+        if isinstance(other, (int, float)):
             return vector(self.x / other, self.y / other, self.z / other)
         elif isinstance(other, (complex)):
             raise Exception("TypeError: unsupported operand type(s) for /: 'complex' and 'vector'")
         return self
     
     def __truediv__(self, other):
-        if isinstance(other, (int, long, float)):
+        if isinstance(other, (int, float)):
             return vector(self.x / other, self.y / other, self.z / other)
         elif isinstance(other, (complex)):
             raise Exception("TypeError: unsupported operand type(s) for /: 'complex' and 'vector'")
@@ -777,8 +777,8 @@ class baseAttrs(baseObj):
         axis = vector(axis) if type(axis) in [tuple, list, np.ndarray] else axis
         origin = vector(origin) if type(origin) in [tuple, list, np.ndarray] else origin
         cmd = {"cmd": "rotate", "idx": self.idx,
-               "attrs": [{"attr": "pos", "value": origin.values()},
-                        {"attr": "axis", "value": axis.values()},
+               "attrs": [{"attr": "pos", "value": list(origin.values())},
+                        {"attr": "axis", "value": list(axis.values())},
                         {"attr": "angle", "value": angle}]}
         if (baseObj.glow != None):
             baseObj.glow.comm.send([cmd])
@@ -896,10 +896,10 @@ class box(trailAttrs):
         object.__setattr__(self, 'width', width)
         object.__setattr__(self, 'height', height)
         cmd = {"cmd": "box", "idx": self.idx, "guid": self.guid, 
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
-                         {"attr": "axis", "value": self.axis.values()},
-                         {"attr": "size", "value": self.size.values()},
-                         {"attr": "up", "value": self.up.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                         {"attr": "axis", "value": list(self.axis.values())},
+                         {"attr": "size", "value": list(self.size.values())},
+                         {"attr": "up", "value": list(self.up.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "opacity", "value": self.opacity},
                          {"attr": "shininess", "value": self.shininess},
@@ -972,10 +972,10 @@ class cone(trailAttrs):
         object.__setattr__(self, 'length', length)
         object.__setattr__(self, 'radius', radius)
         cmd = {"cmd": "cone", "idx": self.idx, "guid": self.guid, 
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
-                         {"attr": "axis", "value": self.axis.values()},
-                         {"attr": "size", "value": self.size.values()},
-                         {"attr": "up", "value": self.up.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                         {"attr": "axis", "value": list(self.axis.values())},
+                         {"attr": "size", "value": list(self.size.values())},
+                         {"attr": "up", "value": list(self.up.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "opacity", "value": self.opacity},
                          {"attr": "shininess", "value": self.shininess},
@@ -1872,7 +1872,7 @@ class faces2(baseAttrs2):
                 cmd = {"idx": self.idx, "attr": "radius", "val": self.radius}            
                 baseObj.cmds.append(cmd)
             elif name == 'axis':
-                cmd = {"idx": self.idx, "attr": name, "val": self.axis.values()}            
+                cmd = {"idx": self.idx, "attr": name, "val": list(self.axis.values())}            
                 baseObj.cmds.append(cmd)
         else:
             super(faces, self).__setattr__(name, value)
@@ -1919,10 +1919,10 @@ class helix(baseAttrs2):
         object.__setattr__(self, 'thickness', thickness)
         object.__setattr__(self, 'coils', coils)
         cmd = {"cmd": "helix", "idx": self.idx, "guid": self.guid, 
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
-                         {"attr": "axis", "value": self.axis.values()},
-                         {"attr": "size", "value": self.size.values()},
-                         {"attr": "up", "value": self.up.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                         {"attr": "axis", "value": list(self.axis.values())},
+                         {"attr": "size", "value": list(self.size.values())},
+                         {"attr": "up", "value": list(self.up.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "thickness", "value": self.thickness},
                          {"attr": "coils", "value": self.coils},
@@ -1996,9 +1996,9 @@ class arrow(trailAttrs):
         object.__setattr__(self, 'headlength', headlength)
         if ((shaftwidth_provided == True) or (headwidth_provided == True) or (headlength_provided == True)):
             cmd = {"cmd": "arrow", "idx": self.idx, "guid": self.guid, 
-                   "attrs": [{"attr": "pos", "value": self.pos.values()},
-                             {"attr": "axis_and_length", "value": self.axis.values()},
-                             {"attr": "up", "value": self.up.values()},
+                   "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                             {"attr": "axis_and_length", "value": list(self.axis.values())},
+                             {"attr": "up", "value": list(self.up.values())},
                              {"attr": "color", "value": list(self.color)},
                              {"attr": "opacity", "value": self.opacity},
                              {"attr": "canvas", "value": self.display.idx if self.display != None else canvas.get_selected().idx if canvas.get_selected() != None else -1},
@@ -2014,9 +2014,9 @@ class arrow(trailAttrs):
             self.appendcmd(cmd)
         else:
             cmd = {"cmd": "arrow", "idx": self.idx, "guid": self.guid, 
-                   "attrs": [{"attr": "pos", "value": self.pos.values()},
-                             {"attr": "axis_and_length", "value": self.axis.values()},
-                             {"attr": "up", "value": self.up.values()},
+                   "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                             {"attr": "axis_and_length", "value": list(self.axis.values())},
+                             {"attr": "up", "value": list(self.up.values())},
                              {"attr": "color", "value": list(self.color)},
                              {"attr": "opacity", "value": self.opacity},
                              {"attr": "canvas", "value": self.display.idx if self.display != None else canvas.get_selected().idx if canvas.get_selected() != None else -1},
@@ -2102,10 +2102,10 @@ class cylinder(trailAttrs):
         object.__setattr__(self, 'length', length)
         object.__setattr__(self, 'radius', radius)
         cmd = {"cmd": "cylinder", "idx": self.idx, "guid": self.guid, 
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
-                         {"attr": "axis", "value": self.axis.values()},
-                         {"attr": "size", "value": self.size.values()},
-                         {"attr": "up", "value": self.up.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                         {"attr": "axis", "value": list(self.axis.values())},
+                         {"attr": "size", "value": list(self.size.values())},
+                         {"attr": "up", "value": list(self.up.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "opacity", "value": self.opacity},
                          {"attr": "shininess", "value": self.shininess},
@@ -2181,10 +2181,10 @@ class pyramid(trailAttrs):
         object.__setattr__(self, 'width', width)
         object.__setattr__(self, 'height', height)
         cmd = {"cmd": "pyramid", "idx": self.idx, "guid": self.guid, 
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
-                         {"attr": "axis", "value": self.axis.values()},
-                         {"attr": "size", "value": self.size.values()},
-                         {"attr": "up", "value": self.up.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                         {"attr": "axis", "value": list(self.axis.values())},
+                         {"attr": "size", "value": list(self.size.values())},
+                         {"attr": "up", "value": list(self.up.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "opacity", "value": self.opacity},
                          {"attr": "shininess", "value": self.shininess},
@@ -2250,10 +2250,10 @@ class sphere(trailAttrs):
         object.__setattr__(self, 'display', display )
 
         cmd = {"cmd": "sphere", "idx": self.idx, "guid": self.guid, 
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
-                         {"attr": "axis", "value": self.axis.values()},
-                         {"attr": "size", "value": self.size.values()},
-                         {"attr": "up", "value": self.up.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                         {"attr": "axis", "value": list(self.axis.values())},
+                         {"attr": "size", "value": list(self.size.values())},
+                         {"attr": "up", "value": list(self.up.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "opacity", "value": self.opacity},
                          {"attr": "shininess", "value": self.shininess},
@@ -2316,10 +2316,10 @@ class ellipsoid(trailAttrs):
         object.__setattr__(self, 'width', width)
         object.__setattr__(self, 'height', height)
         cmd = {"cmd": "ellipsoid", "idx": self.idx, "guid": self.guid, 
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
-                         {"attr": "axis", "value": self.axis.values()},
-                         {"attr": "size", "value": self.size.values()},
-                         {"attr": "up", "value": self.up.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                         {"attr": "axis", "value": list(self.axis.values())},
+                         {"attr": "size", "value": list(self.size.values())},
+                         {"attr": "up", "value": list(self.up.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "opacity", "value": self.opacity},
                          {"attr": "shininess", "value": self.shininess},
@@ -2393,10 +2393,10 @@ class ring(baseAttrs):
         object.__setattr__(self, 'retain', retain)
         #object.__setattr__(self, 'trail_object', curve() if self.trail_type == "curve" else pnts())
         cmd = {"cmd": "ring", "idx": self.idx, "guid": self.guid, 
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
-                         {"attr": "axis", "value": self.axis.values()},
-                         {"attr": "size", "value": self.size.values()},
-                         {"attr": "up", "value": self.up.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                         {"attr": "axis", "value": list(self.axis.values())},
+                         {"attr": "size", "value": list(self.size.values())},
+                         {"attr": "up", "value": list(self.up.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "canvas", "value": self.display.idx if self.display != None else canvas.get_selected().idx if canvas.get_selected() != None else -1},
                          {"attr": "make_trail", "value": self.make_trail},
@@ -2457,7 +2457,7 @@ class label(baseAttrs2):
         object.__setattr__(self, 'linecolor', linecolor)
         object.__setattr__(self, 'space', space)
         cmd = {"cmd": "label", "idx": self.idx, "guid": self.guid, 
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
                          {"attr": "text", "value": self.text},
                          {"attr": "xoffset", "value": self.xoffset},
                          {"attr": "yoffset", "value": self.yoffset},
@@ -2499,9 +2499,9 @@ class frame(baseAttrs):
                                     display=display,visible=visible,**kwargs)
         object.__setattr__(self, 'objects', [])
         cmd = {"cmd": "compound", "idx": self.idx, "guid": self.guid,
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
-                         {"attr": "axis", "value": self.axis.values()},
-                         {"attr": "up", "value": self.up.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                         {"attr": "axis", "value": list(self.axis.values())},
+                         {"attr": "up", "value": list(self.up.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "visible", "value": self.visible},
                          {"attr": "canvas", "value": self.display.idx if self.display != None else canvas.get_selected().idx if canvas.get_selected() != None else -1}]}
@@ -2525,9 +2525,9 @@ class frame(baseAttrs):
         for obj in self.objects:
             obj_idxs.append(obj.idx)
         cmd = {"cmd": "compound", "idx": self.idx, 
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
-                         {"attr": "axis", "value": self.axis.values()},
-                         {"attr": "up", "value": self.up.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
+                         {"attr": "axis", "value": list(self.axis.values())},
+                         {"attr": "up", "value": list(self.up.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "obj_idxs", "value": obj_idxs},
                          {"attr": "canvas", "value": self.display.idx if self.display != None else canvas.get_selected().idx if canvas.get_selected() != None else -1}]}
@@ -2598,9 +2598,9 @@ class sceneObj(baseObj):
                     range=(1.,1.,1.), scale=(1.,1.,1.), up=(0.,1.,0.), autoscale=True, userzoom=True, userspin=True, **kwargs):
         super(sceneObj, self).__init__(**kwargs)
         rate.active = False
-        if isinstance(range, (int, long, float)):
+        if isinstance(range, (int, float)):
             range = (range,range,range)
-        if isinstance(scale, (int, long, float)):
+        if isinstance(scale, (int, float)):
             scale = (scale,scale,scale)
         if (range[0] != 1.) and (range[0] != 0.):
             scale[0] = 1./range[0]
@@ -2649,7 +2649,7 @@ class sceneObj(baseObj):
             if name in ['foreground','background','ambient']:
                 self.__dict__[name] = value
             elif name in ['scale','range']:
-                if isinstance(value, (int, long, float)):
+                if isinstance(value, (int, float)):
                     value = (value,value,value)
                 self.__dict__[name] = vector(value) if type(value) is tuple else value
                 self.__dict__[name].add_notification((self.addattr,name))
@@ -2698,7 +2698,7 @@ class sceneObj(baseObj):
     
     def bind(self, *args):
         cmd = {"cmd": "bind", "idx": self.idx, "selector": '#' + self.sceneId + ' canvas', "sceneguid": self.guid}
-        if callable(args[1]):
+        if isinstance(args[1], collections.Callable):
             cmd['events'] = args[0]
             guid = str(uuid.uuid4())
             callback_registry[guid] = args[1]
@@ -2707,7 +2707,7 @@ class sceneObj(baseObj):
                 cmd['events'] = self.evtns(args[0],args[1].__name__)      # add func name namespace to events
             if len(args) > 2:
                 obj = args[2]
-                if type(obj) in [str, int, long, bool, float, tuple, complex]:
+                if type(obj) in [str, int, int, bool, float, tuple, complex]:
                     cmd['arbArg'] = obj
                 elif isinstance(obj, collections.Sequence):
                     cmd['arbArg'] = self.encode_seq(obj)
@@ -2719,7 +2719,7 @@ class sceneObj(baseObj):
 
     def unbind(self, *args):
         cmd = {"cmd": "unbind", "idx": self.idx, "selector": '#' + self.sceneId + ' canvas'}
-        if callable(args[1]):
+        if isinstance(args[1], collections.Callable):
             cmd['events'] = args[0]
             if inspect.isfunction(args[1]):
                 cmd['events'] = self.evtns(args[0],args[1].__name__)      # add func name namespace to events
@@ -2789,11 +2789,11 @@ class canvas(sceneObj):
                          {"attr": "ambient", "value": list(self.ambient)},
                          {"attr": "height", "value": self.height},
                          {"attr": "width", "value": self.width},
-                         {"attr": "forward", "value": self.forward.values()},
+                         {"attr": "forward", "value": list(self.forward.values())},
                          {"attr": "fov", "value": self.fov},
                          {"attr": "range", "value": self.range[0]},
-                         {"attr": "up", "value": self.up.values()},
-                         {"attr": "center", "value": self.center.values()},
+                         {"attr": "up", "value": list(self.up.values())},
+                         {"attr": "center", "value": list(self.center.values())},
                          {"attr": "autoscale", "value": self.autoscale},
                          {"attr": "userzoom", "value": self.userzoom},
                          {"attr": "userspin", "value": self.userspin}
@@ -2860,7 +2860,7 @@ class local_light(baseObj):
         object.__setattr__(self, 'display', display)
         object.__setattr__(self, 'frame', frame)
         cmd = {"cmd": "local_light", "idx": self.idx, "guid": self.guid,
-               "attrs": [{"attr": "pos", "value": self.pos.values()},
+               "attrs": [{"attr": "pos", "value": list(self.pos.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "canvas", "value": self.display.idx if self.display != None else canvas.get_selected().idx if canvas.get_selected() != None else -1}
                          ]}
@@ -2873,7 +2873,7 @@ class local_light(baseObj):
             self.__dict__[name] = vector(value) if type(value) is tuple else value
             cmd = {}
             if name == 'pos':
-                cmd = {"idx": self.idx, "attr": name, "val": self.pos.values()}            
+                cmd = {"idx": self.idx, "attr": name, "val": list(self.pos.values())}            
                 
             baseObj.cmds.append(cmd)
         elif name == 'color':
@@ -2894,7 +2894,7 @@ class distant_light(baseObj):
         object.__setattr__(self, 'display', display)
         object.__setattr__(self, 'frame', frame)
         cmd = {"cmd": "distant_light", "idx": self.idx,  "guid": self.guid,
-               "attrs": [{"attr": "direction", "value": self.direction.values()},
+               "attrs": [{"attr": "direction", "value": list(self.direction.values())},
                          {"attr": "color", "value": list(self.color)},
                          {"attr": "canvas", "value": self.display.idx if self.display != None else canvas.get_selected().idx if canvas.get_selected() != None else -1}
                          ]}
@@ -2907,7 +2907,7 @@ class distant_light(baseObj):
             self.__dict__[name] = vector(value) if type(value) is tuple else value
             cmd = {}
             if name == 'direction':
-                cmd = {"idx": self.idx, "attr": name, "val": self.direction.values()}            
+                cmd = {"idx": self.idx, "attr": name, "val": list(self.direction.values())}            
                 
             baseObj.cmds.append(cmd)
         elif name == 'color':
